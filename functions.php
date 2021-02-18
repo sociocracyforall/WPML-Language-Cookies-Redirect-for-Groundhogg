@@ -1,5 +1,5 @@
 //add this snippet to your functions.php
-//tested on Wordpress 5.6.1 with WPML 4.4.8 and Groundhogg 2.2.24 
+//tested on Wordpress 5.6.1 with WPML 4.4.8 and Groundhogg 2.3.4.1
 //WPML cookie code modified from https://tombroucke.be/blog/wpml-remember-users-language-choice/
 
 
