@@ -27,7 +27,9 @@ add_action( 'init', function (){
     // GET variables
     $switch_language = filter_input(INPUT_GET, 'switch_language', FILTER_SANITIZE_STRING);
     $user_selected_language = filter_input( INPUT_COOKIE, 'wp-wpml_user_selected_language', FILTER_SANITIZE_STRING );
-    $is_gh_managed_page_in_default_lang = strtok( $_SERVER['REQUEST_URI'], '/' ) == 'gh' && strtok( '/' ) !== 'tracking';
+
+    $pages_to_redirect = ['preferences', 'calendar'];
+    $is_gh_managed_page_in_default_lang = strtok( $_SERVER['REQUEST_URI'], '/' ) == 'gh' && in_array(strtok( '/' ), $pages_to_redirect);
     $user_lang_not_eq_current_lang = $user_selected_language != ICL_LANGUAGE_CODE ;
 
     if( $switch_language && is_valid_language($switch_language) ) {
