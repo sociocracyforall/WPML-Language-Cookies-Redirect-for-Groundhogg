@@ -1,3 +1,5 @@
+<?php
+
 //add this snippet to your functions.php
 //tested on Wordpress 5.6.1 with WPML 4.4.8 and Groundhogg 2.3.4.1
 //WPML cookie code modified from https://tombroucke.be/blog/wpml-remember-users-language-choice/
@@ -29,10 +31,15 @@ add_action( 'init', function (){
     $user_selected_language = filter_input( INPUT_COOKIE, 'wp-wpml_user_selected_language', FILTER_SANITIZE_STRING );
 
     $pages_to_redirect = ['preferences', 'calendar'];
-    $is_gh_managed_page_in_default_lang = strtok( $_SERVER['REQUEST_URI'], '/' ) == 'gh' && in_array(strtok( '/' ), $pages_to_redirect);
+    $url_prefix = strtok( $_SERVER['REQUEST_URI'], '/' );
+    $is_gh_managed_page_in_default_lang = $url_prefix == 'gh' && in_array(strtok( '/' ), $pages_to_redirect);
     $user_lang_not_eq_current_lang = $user_selected_language != ICL_LANGUAGE_CODE ;
 
-    if( $switch_language && is_valid_language($switch_language) ) {
+    $switching = $switch_language && is_valid_language($switch_language);
+    $need_cookie_without_switching = $user_selected_language != $url_prefix && is_valid_language($url_prefix);
+    if( $need_cookie_without_switching ) { $switch_language = $url_prefix; }
+
+    if( $switching || $need_cookie_without_switching ) {
         // Create a cookie that never expires, technically it expires in 10 years
         setcookie( 'wp-wpml_user_selected_language', $switch_language, time() + (10 * 365 * 24 * 60 * 60), '/' );
         // Let's redirect the users to the request uri without the querystring, otherwise the server will send an uncached page
@@ -47,3 +54,5 @@ add_action( 'init', function (){
 }, 1);
 
 // END WPML COOKIE AND REDIRECT MANAGEMENT FOR GROUNDHOGG
+
+?>
