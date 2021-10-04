@@ -43,7 +43,8 @@ add_action( 'init', function (){
         // Create a cookie that never expires, technically it expires in 10 years
         setcookie( 'wp-wpml_user_selected_language', $switch_language, time() + (10 * 365 * 24 * 60 * 60), '/' );
         // Let's redirect the users to the request uri without the querystring, otherwise the server will send an uncached page
-        wp_redirect( strtok( $_SERVER['REQUEST_URI'], '?' ) );
+        $request_uri_without_query = strtok( $_SERVER['REQUEST_URI'], '?' );
+        if( $request_uri_without_query != $_SERVER['REQUEST_URI'] ) { wp_redirect( $request_uri_without_query ); }
         exit;
     } elseif ( $is_gh_managed_page_in_default_lang && $user_lang_not_eq_current_lang && is_valid_language($user_selected_language) ) { 
         // We are on a groundhogg managed page and in need of a redirect to user_selected_language
